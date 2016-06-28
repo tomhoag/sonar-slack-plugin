@@ -77,6 +77,14 @@
 		</license>
 	</licenses>
 	
+	<url>https://github.com/tomhoag/sonar-slack-plugin</url>
+
+	<scm>
+		<url>https://github.com/tomhoag/sonar-slack-plugin</url>
+		<connection>scm:git:git://github.com/tomhoag/sonar-slack-plugin.git</connection>
+		<developerConnection>scm:git:git@github.com/tomhoag/sonar-slack-plugin.git</developerConnection>
+		<tag>sonar-slack-plugin-0.1</tag>
+	</scm>
 	
 	<developers>
 		<developer>
