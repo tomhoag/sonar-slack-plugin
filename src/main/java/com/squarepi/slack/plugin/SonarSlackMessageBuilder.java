@@ -11,8 +11,6 @@ import org.sonar.api.issue.Issue;
 import org.sonar.api.issue.ProjectIssues;
 import org.sonar.api.resources.Project;
 import org.sonar.api.rule.Severity;
-import org.sonar.api.utils.log.Logger;
-import org.sonar.api.utils.log.Loggers;
 
 import com.google.common.collect.Lists;
 
@@ -20,19 +18,11 @@ public class SonarSlackMessageBuilder {
 	private final Project project;
 	private final ProjectIssues projectIssues;
 	private final Settings settings;
-	private static final Logger LOGGER = Loggers.get(SonarSlackNotifier.class);
 
 	public SonarSlackMessageBuilder(Project project, Settings settings, ProjectIssues projectIssues) {
 		this.project = project;
 		this.projectIssues = projectIssues;
 		this.settings = settings;
-		
-	}
-
-	public String getPreNotificationMessage(String preMessageTemplate) {
-		String preMessage = preMessageTemplate.replace("{project}", project.getName()).replace("{date}",
-				project.getAnalysisDate().toString());
-		return preMessage;
 	}
 
 	public String getStatusMessage() {
@@ -83,15 +73,9 @@ public class SonarSlackMessageBuilder {
 		context.put("newline", "\n");
 		context.put("nl", "\n");
 
-//$projectName $analysisDate (New/Total) $newline Blockers: $issuesNewBlockers / $issuesBlockers $newline Major: $issuesNewMajor / $issuesMajor Code Smells: $codeSmellsNew / $codeSmells
-
-//Blockers: $issuesNewBlockers / $issuesBlockers $newline Major: $issuesNewMajor / $issuesMajor $newline Code Smells: $codeSmellsNew / $codeSmells
-
 		String template = settings.getString(SonarSlackProperties.MESSAGE_TEMPLATE);
 		StringWriter writer = new StringWriter();
 		Velocity.evaluate(context, writer, "TemplateName", template);
-		//writer.flush();
-		//writer.close();
 
 		return writer.toString();
 	}

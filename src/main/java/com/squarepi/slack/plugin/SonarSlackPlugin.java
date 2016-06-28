@@ -6,9 +6,6 @@ import org.sonar.api.PropertyType;
 import org.sonar.api.Plugin;
 import org.sonar.api.Plugin.Context;
 
-import java.util.List;
-import java.util.ArrayList;
-
 @Properties({ 
 	@Property(key = SonarSlackProperties.ENABLED, 
               name = "Enabled",
