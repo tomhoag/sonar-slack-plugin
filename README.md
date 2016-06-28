@@ -1,8 +1,8 @@
 # sonar-slack-plugin
 A SonarQube plugin to send notifications to a Slack channel.
 
-## Howto ##
-To build the plugin call **mvn clean package** (or download the current release). The jar file must be copied to the *SONAR_HOME/extensions/plugins* folder and SonarQube must be restarted.  (SONAR_HOME on OSX and Linux is likely /opt/sonar)
+## Plugin Build & Installation ##
+Build the plugin with **mvn clean package**. The resulting jar file (in the target directory) must be copied to the *SONAR_HOME/extensions/plugins* folder and SonarQube must be restarted.  (SONAR_HOME on OSX and Linux is likely /opt/sonar)
 
 Tested for sonarqube 5.6
 
