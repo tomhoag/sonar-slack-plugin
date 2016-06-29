@@ -17,7 +17,7 @@ import org.sonar.api.Plugin.Context;
 	@Property(key = SonarSlackProperties.CHANNEL,
               name = "Slack Channel",
               defaultValue = "",
-              description = "The Slack channel to send notifications to (e.g. #channel or @username).  Note: The notification will not be sent if the channel or user does not exist.",
+              description = "The Slack channel to send notifications to (e.g. #channel or @username). If left empty, the channel configured with the webhook will be used.  Note: The notification will not be sent if the channel or user does not exist.",
               global = true,
               project = true,
               type = PropertyType.STRING),
