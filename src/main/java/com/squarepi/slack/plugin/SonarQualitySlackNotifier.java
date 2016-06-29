@@ -13,10 +13,46 @@ import org.sonar.api.issue.ProjectIssues;
 import org.sonar.api.resources.Project;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
+import org.sonar.api.ce.posttask.PostProjectAnalysisTask;
+import org.sonar.api.ce.posttask.QualityGate;
 
 import net.gpedro.integrations.slack.SlackApi;
 import net.gpedro.integrations.slack.SlackMessage;
 
+
+public class SonarQualitySlackNotifier implements PostProjectAnalysisTask {
+
+	private Settings settings;
+
+	public SonarQualitySlackNotifier(Settings settings) {
+		this.settings = settings;
+	}
+	
+	@Override
+	public void finished(ProjectAnalysis analysis) {
+	
+		QualityGate gate = analysis.getQualityGate();
+		
+		if (gate != null && settings.getBoolean(ENABLED)) {
+		
+			String channel = settings.getString(CHANNEL);
+			String hook = settings.getString(WEBHOOK);
+			String handle = settings.getString(HANDLE);
+			
+			String statusMessage = "Quality gate is " + gate.getStatus();
+			
+			SlackApi api = new SlackApi(hook);
+			api.call(new SlackMessage(channel, handle, statusMessage));
+			
+			Loggers.get(getClass()).info("Quality gate is " + gate.getStatus());
+		} else {
+			Loggers.get(getClass()).info("gate: " + gate);
+			Loggers.get(getClass()).info("enabled: " + settings.getBoolean(ENABLED));
+		}
+	}
+}
+
+/*
 public class SonarSlackNotifier implements PostJob {
 	private static final Logger LOGGER = Loggers.get(SonarSlackNotifier.class);
 
@@ -49,3 +85,4 @@ public class SonarSlackNotifier implements PostJob {
 		}
 	}
 }
+*/

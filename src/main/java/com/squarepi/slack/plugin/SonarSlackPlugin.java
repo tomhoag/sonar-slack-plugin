@@ -47,6 +47,7 @@ import org.sonar.api.Plugin.Context;
 public class SonarSlackPlugin implements Plugin { 
 	@Override
 	public void define(Context context) {
-		context.addExtension(SonarSlackNotifier.class);
+		//context.addExtensions(SonarQualitySlackNotifier.class, SonarIssuesSlackNotifier.class);
+		context.addExtension(SonarIssuesSlackNotifier.class);
 	}
 }
