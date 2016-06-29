@@ -38,7 +38,7 @@ import org.sonar.api.Plugin.Context;
 	@Property(key = SonarSlackProperties.MESSAGE_TEMPLATE,
 			  name = "Notification Message Template",
 			  description = "The notification message template. For a list of available variables see http://github.com/tomhoag",
-			  defaultValue = "$projectName has been analyzed at $analysisDate.$newlineStatus: $issuesNew new issues | $issuesResolved resolved issues | $issuesTotal total issues",
+			  defaultValue = "$name analyzed at $date $nl Issues: $total (new: $new) $nl Blockers: $blockers (new: $newBlockers) $nl Code Smells: $codeSmells (new: $newCodeSmells)",
 			  global = true,
 			  project = true,
 			  type = PropertyType.STRING),
