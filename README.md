@@ -22,7 +22,7 @@ The Slack plugin settings can be configured on the Administration page.
 
 **Slack Hook** - The Slack webhook used to send notifications.  For more info, please take a look @ [https://my.slack.com/services/new/incoming-webhook]()
 
-**Notification Message** - The template for the Slack notification. You may substitue the following variables into your message:
+**Notification Message** - The template for the Slack notification. The following variables will be replaced by their values in your message:
 
 | Variable  |  Description |
 |---|---|
@@ -44,6 +44,10 @@ The Slack plugin settings can be configured on the Administration page.
 | $newCodeSmells | Number of new Code Smells |
 | $codeSmells | Total number of Code Smells |
 | $nl | newline |
+
+## Attributions ##
+
+Inspired by [https://github.com/dbac2002/sonar-hipchat-plugin]()
 
 ## TODO ##
 
