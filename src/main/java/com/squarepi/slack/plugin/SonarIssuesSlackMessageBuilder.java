@@ -1,34 +1,27 @@
 package com.squarepi.slack.plugin;
 
 import java.io.StringWriter;
-import java.util.List;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.List;
 
-import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
+import org.apache.velocity.VelocityContext;
 
-import org.sonar.api.config.Settings;
-import org.sonar.api.issue.Issue;
-import org.sonar.api.issue.ProjectIssues;
 import org.sonar.api.batch.postjob.issue.PostJobIssue;
 import org.sonar.api.batch.postjob.PostJobContext;
-import org.sonar.api.batch.sensor.SensorContext;
-
-import org.sonar.api.resources.Project;
 import org.sonar.api.batch.rule.Severity;
+import org.sonar.api.config.Settings;
 
 import com.google.common.collect.Lists;
 
 public class SonarIssuesSlackMessageBuilder {
 	private final Settings settings;
 	private final PostJobContext context;
-	private final SensorContext sensor;
 
-	public SonarIssuesSlackMessageBuilder(Settings settings, PostJobContext context, SensorContext sensor) {
+	public SonarIssuesSlackMessageBuilder(Settings settings, PostJobContext context) {
 		this.settings = settings;
 		this.context = context;
-		this.sensor = sensor;
 	}
 
 	public String getStatusMessage() {
@@ -54,17 +47,13 @@ public class SonarIssuesSlackMessageBuilder {
 		long codeSmellsNew = issuesNewCritical + issuesNewMajor + issuesNewMinor + issuesNewInfo;
 		long codeSmells = issuesCritical + issuesMajor + issuesMinor + issuesInfo;
 				
-		//List<Issue> issuesResolved = Lists.newArrayList(projectIssues.resolvedIssues());
-
-		String name = sensor.module().key();
 		Velocity.init();
 
 		VelocityContext velocityContext = new VelocityContext();
 		
-		velocityContext.put("name", settings.getString("sonar.projectName"));
+		velocityContext.put("name", settings.getString("sonar.projectKey"));
 		velocityContext.put("date", DateFormat.getDateInstance().format(new Date()));
 		velocityContext.put("new", new Long(issuesNew));
-		//velocityContext.put("resolved", issuesResolved.size());
 
 		velocityContext.put("total", issues.size());
 		velocityContext.put("newBlockers", new Long(issuesNewBlockers));

@@ -8,10 +8,7 @@ import static com.squarepi.slack.plugin.SonarSlackProperties.WEBHOOK;
 import org.sonar.api.batch.postjob.PostJob;
 import org.sonar.api.batch.postjob.PostJobContext;
 import org.sonar.api.batch.postjob.PostJobDescriptor;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.config.Settings;
-import org.sonar.api.issue.ProjectIssues;
-import org.sonar.api.resources.Project;
 import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 
@@ -26,11 +23,9 @@ public class SonarIssuesSlackNotifier implements PostJob {
 	private static final Logger LOGGER = Loggers.get(SonarIssuesSlackNotifier.class);
 	
 	private Settings settings;
-	private SensorContext sensor;
 	
-	public SonarIssuesSlackNotifier(Settings settings, SensorContext sensor) {
+	public SonarIssuesSlackNotifier(Settings settings) {
 		this.settings = settings;
-		this.sensor = sensor;
 		LOGGER.info("SonarIssuesSlackNotifier Hello World!!");
 	}
 	
@@ -56,7 +51,7 @@ public class SonarIssuesSlackNotifier implements PostJob {
 					return;
 				}
 				
-				SonarIssuesSlackMessageBuilder messageBuilder = new SonarIssuesSlackMessageBuilder(settings, context, sensor);
+				SonarIssuesSlackMessageBuilder messageBuilder = new SonarIssuesSlackMessageBuilder(settings, context);
 				String statusMessage = messageBuilder.getStatusMessage();
 				
 				LOGGER.info("statusMessage: " + statusMessage);

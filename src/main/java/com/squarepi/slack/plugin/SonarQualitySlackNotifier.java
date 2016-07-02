@@ -1,7 +1,5 @@
 package com.squarepi.slack.plugin;
 
-import java.lang.StringBuilder;
-
 import static org.sonar.api.CoreProperties.PROJECT_KEY_PROPERTY;
 import static com.squarepi.slack.plugin.SonarSlackProperties.ENABLED;
 import static com.squarepi.slack.plugin.SonarSlackProperties.HANDLE;
@@ -10,12 +8,7 @@ import static com.squarepi.slack.plugin.SonarSlackProperties.WEBHOOK;
 
 import static org.apache.commons.lang.StringUtils.isBlank;
 
-import org.sonar.api.batch.PostJob;
-import org.sonar.api.batch.SensorContext;
 import org.sonar.api.config.Settings;
-import org.sonar.api.issue.ProjectIssues;
-import org.sonar.api.resources.Project;
-import org.sonar.api.utils.log.Logger;
 import org.sonar.api.utils.log.Loggers;
 import org.sonar.api.ce.posttask.PostProjectAnalysisTask;
 import org.sonar.api.ce.posttask.QualityGate;
@@ -45,9 +38,9 @@ public class SonarQualitySlackNotifier implements PostProjectAnalysisTask {
 		
 			String channel = settings.getString(CHANNEL);
 			String hook = settings.getString(WEBHOOK);
-			String handle = settings.getString(HANDLE);
+			String handles = settings.getString(HANDLE);
 			
-			StringBuilder statusMessage = new StringBuilder(settings.getString(PROJECT_KEY_PROPERTY) + ": Quality gate is " + gate.getStatus());
+			StringBuilder statusMessage = new StringBuilder(settings.getString("sonar.projectKey") + ": Quality gate is " + gate.getStatus());
 			
 			if(gate.getStatus() == ERROR) {
 				statusMessage.append(" :white_frowning_face:");
@@ -57,13 +50,19 @@ public class SonarQualitySlackNotifier implements PostProjectAnalysisTask {
 				statusMessage.append(" :smile:");
 			}
 			
-			SlackApi api = new SlackApi(hook);
-			api.call(new SlackMessage(channel, handle, statusMessage.toString()));
-			
-			Loggers.get(getClass()).info("Quality gate is " + gate.getStatus());
-			Loggers.get(getClass()).info("project name is " + settings.getString(PROJECT_KEY_PROPERTY));
+			if(handles != null) {
+				SlackApi api = new SlackApi(hook);
+				for(String handle: handles.split(",")) {
+					if(handle != null && (handle.trim().startsWith("#") || handle.trim().startsWith("@"))) {
+						api.call(new SlackMessage(channel, handle.trim(), statusMessage.toString()));
+					} else {
+						Loggers.get(getClass()).info("statusMessage not sent to " + handle);
+					}
+				}
+			}
+					
+			Loggers.get(getClass()).info(statusMessage.toString());
 		} else {
-			Loggers.get(getClass()).info("gate: " + gate);
 			Loggers.get(getClass()).info("enabled: " + settings.getBoolean(ENABLED));
 		}
 	}
