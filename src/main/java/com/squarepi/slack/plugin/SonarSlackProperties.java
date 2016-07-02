@@ -6,7 +6,7 @@ public class SonarSlackProperties {
 	public static final String HANDLE = "sonar.slack.handle";
 	public static final String CHANNEL = "sonar.slack.channel";
 	public static final String WEBHOOK = "sonar.slack.webhook";
-	public static final String MESSAGE_TEMPLATE = "sonar.hipchat.message.template";
+	public static final String MESSAGE_TEMPLATE = "sonar.slack.message.template";
 	
 	private SonarSlackProperties() {
 		// no instances

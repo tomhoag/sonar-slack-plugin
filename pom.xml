@@ -13,7 +13,9 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.buildVersion>5.6</sonar.buildVersion>
-        <sonar.pluginName>Slack Notifier</sonar.pluginName>
+        <sonar.projectName>Sonar Slack Notifier</sonar.projectName>
+        <sonar.pluginName>Slack</sonar.pluginName>
+     	<sonar.host.url>http://192.168.250.57:9000</sonar.host.url>
         <sonar.apiVersion>5.6</sonar.apiVersion>
     	<jdk.min.version>1.8</jdk.min.version>
 	</properties>

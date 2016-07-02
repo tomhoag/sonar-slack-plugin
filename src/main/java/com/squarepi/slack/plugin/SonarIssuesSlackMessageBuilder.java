@@ -2,6 +2,8 @@ package com.squarepi.slack.plugin;
 
 import java.io.StringWriter;
 import java.util.List;
+import java.text.DateFormat;
+import java.util.Date;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -11,22 +13,22 @@ import org.sonar.api.issue.Issue;
 import org.sonar.api.issue.ProjectIssues;
 import org.sonar.api.batch.postjob.issue.PostJobIssue;
 import org.sonar.api.batch.postjob.PostJobContext;
+import org.sonar.api.batch.sensor.SensorContext;
 
 import org.sonar.api.resources.Project;
 import org.sonar.api.batch.rule.Severity;
 
 import com.google.common.collect.Lists;
 
-public class SonarSlackMessageBuilder {
-	//private final Project project;
-	//private final ProjectIssues projectIssues;
+public class SonarIssuesSlackMessageBuilder {
 	private final Settings settings;
 	private final PostJobContext context;
+	private final SensorContext sensor;
 
-	public SonarSlackMessageBuilder(Settings settings, PostJobContext context) {
-		//this.projectIssues = projectIssues;
+	public SonarIssuesSlackMessageBuilder(Settings settings, PostJobContext context, SensorContext sensor) {
 		this.settings = settings;
 		this.context = context;
+		this.sensor = sensor;
 	}
 
 	public String getStatusMessage() {
@@ -54,11 +56,13 @@ public class SonarSlackMessageBuilder {
 				
 		//List<Issue> issuesResolved = Lists.newArrayList(projectIssues.resolvedIssues());
 
+		String name = sensor.module().key();
 		Velocity.init();
 
 		VelocityContext velocityContext = new VelocityContext();
-		//velocityContext.put("name", project.getName());
-		//velocityContext.put("date", project.getAnalysisDate().toString());
+		
+		velocityContext.put("name", settings.getString("sonar.projectName"));
+		velocityContext.put("date", DateFormat.getDateInstance().format(new Date()));
 		velocityContext.put("new", new Long(issuesNew));
 		//velocityContext.put("resolved", issuesResolved.size());
 

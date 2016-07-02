@@ -26,9 +26,11 @@ public class SonarIssuesSlackNotifier implements PostJob {
 	private static final Logger LOGGER = Loggers.get(SonarIssuesSlackNotifier.class);
 	
 	private Settings settings;
+	private SensorContext sensor;
 	
-	public SonarIssuesSlackNotifier(Settings settings) {
+	public SonarIssuesSlackNotifier(Settings settings, SensorContext sensor) {
 		this.settings = settings;
+		this.sensor = sensor;
 		LOGGER.info("SonarIssuesSlackNotifier Hello World!!");
 	}
 	
@@ -41,6 +43,7 @@ public class SonarIssuesSlackNotifier implements PostJob {
 	public void execute(PostJobContext context) {
 		// issues are not accessible when the mode "issues" is not enabled
 		// with the scanner property "sonar.analysis.mode=issues"
+				
 		if (context.analysisMode().isIssues()) {
 			
 			if (settings.getBoolean(ENABLED)) {
@@ -53,7 +56,7 @@ public class SonarIssuesSlackNotifier implements PostJob {
 					return;
 				}
 				
-				SonarSlackMessageBuilder messageBuilder = new SonarSlackMessageBuilder(settings, context);
+				SonarIssuesSlackMessageBuilder messageBuilder = new SonarIssuesSlackMessageBuilder(settings, context, sensor);
 				String statusMessage = messageBuilder.getStatusMessage();
 				
 				LOGGER.info("statusMessage: " + statusMessage);
