@@ -11,47 +11,47 @@ import org.apache.velocity.VelocityContext;
 import org.sonar.api.batch.postjob.issue.PostJobIssue;
 import org.sonar.api.batch.postjob.PostJobContext;
 import org.sonar.api.batch.rule.Severity;
-import org.sonar.api.config.Settings;
+import org.sonar.api.config.Configuration;
 
 import com.google.common.collect.Lists;
 
 public class SonarIssuesSlackMessageBuilder {
-	private final Settings settings;
+	private final Configuration config;
 	private final PostJobContext context;
 
-	public SonarIssuesSlackMessageBuilder(Settings settings, PostJobContext context) {
-		this.settings = settings;
+	public SonarIssuesSlackMessageBuilder(Configuration config, PostJobContext context) {
+		this.config = config;
 		this.context = context;
 	}
 
 	public String getStatusMessage() {
 		List<PostJobIssue> issues = Lists.newArrayList(context.issues());
-		
+
 		long issuesNew = issues.stream().filter(i -> i.isNew()).count();
 
 		long issuesNewBlockers = issues.stream().filter(i -> i.isNew() && i.severity().equals(Severity.BLOCKER)).count();
 		long issuesBlockers = issues.stream().filter(i -> i.severity().equals(Severity.BLOCKER)).count();
-		
+
 		long issuesNewCritical = issues.stream().filter(i -> i.isNew() && i.severity().equals(Severity.CRITICAL)).count();
 		long issuesCritical = issues.stream().filter(i -> i.severity().equals(Severity.CRITICAL)).count();
-		
+
 		long issuesNewMajor = issues.stream().filter(i -> i.isNew() && i.severity().equals(Severity.MAJOR)).count();
 		long issuesMajor = issues.stream().filter(i -> i.severity().equals(Severity.MAJOR)).count();
-		
+
 		long issuesNewMinor = issues.stream().filter(i -> i.isNew() && i.severity().equals(Severity.MINOR)).count();
 		long issuesMinor = issues.stream().filter(i -> i.severity().equals(Severity.MINOR)).count();
-		
+
 		long issuesNewInfo = issues.stream().filter(i -> i.isNew() && i.severity().equals(Severity.INFO)).count();
 		long issuesInfo = issues.stream().filter(i -> i.severity().equals(Severity.INFO)).count();
-		
+
 		long codeSmellsNew = issuesNewCritical + issuesNewMajor + issuesNewMinor + issuesNewInfo;
 		long codeSmells = issuesCritical + issuesMajor + issuesMinor + issuesInfo;
-				
+
 		Velocity.init();
 
 		VelocityContext velocityContext = new VelocityContext();
-		
-		velocityContext.put("name", settings.getString("sonar.projectKey"));
+
+		velocityContext.put("name", config.get("sonar.projectKey").get());
 		velocityContext.put("date", DateFormat.getDateInstance().format(new Date()));
 		velocityContext.put("new", new Long(issuesNew));
 
@@ -72,7 +72,7 @@ public class SonarIssuesSlackMessageBuilder {
 
 		velocityContext.put("nl", "\n");
 
-		String template = settings.getString(SonarSlackProperties.MESSAGE_TEMPLATE);
+		String template = config.get(SonarSlackProperties.MESSAGE_TEMPLATE).get();
 		StringWriter writer = new StringWriter();
 		Velocity.evaluate(velocityContext, writer, "TemplateName", template);
 
