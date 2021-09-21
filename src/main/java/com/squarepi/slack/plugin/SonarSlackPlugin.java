@@ -6,8 +6,8 @@ import org.sonar.api.PropertyType;
 import org.sonar.api.Plugin;
 import org.sonar.api.Plugin.Context;
 
-@Properties({ 
-	@Property(key = SonarSlackProperties.ENABLED, 
+@Properties({
+	@Property(key = SonarSlackProperties.ENABLED,
               name = "Enabled",
               defaultValue = "true",
               description = "If set to false, Slack notifications are not sent",
@@ -34,7 +34,7 @@ import org.sonar.api.Plugin.Context;
     		  description = "The Slack web hook used to send notifications",
     		  global = true,
     		  project = true,
-    		  type = PropertyType.STRING),    
+    		  type = PropertyType.STRING),
 	@Property(key = SonarSlackProperties.MESSAGE_TEMPLATE,
 			  name = "Notification Message Template",
 			  description = "The notification message template. For a list of available variables see http://github.com/tomhoag",
@@ -43,8 +43,8 @@ import org.sonar.api.Plugin.Context;
 			  project = true,
 			  type = PropertyType.STRING),
 	})
-	
-public class SonarSlackPlugin implements Plugin { 
+
+public class SonarSlackPlugin implements Plugin {
 	@Override
 	public void define(Context context) {
 		context.addExtensions(SonarQualitySlackNotifier.class, SonarIssuesSlackNotifier.class);
